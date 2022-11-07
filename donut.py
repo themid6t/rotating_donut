@@ -70,6 +70,7 @@ def rotate(positions, A, B):
         positions[i] = np.dot(i, rotate)
     
     return positions
+    
 # print(don[0])
 # cir = circleNates(R1, spacing=spacing)
 # don = [torusNates(i) for i in cir]
