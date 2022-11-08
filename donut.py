@@ -17,10 +17,14 @@ screen_size = rows*columns
 x_offset = rows / 2
 y_offset = columns / 2
 
-A, B = -0.008, 0.004  #A --> X rotation angle, B --> Y rotation angle
+A, B = 0.04, 0.01 #A --> X rotation angle, B --> Y rotation angle
 R1, R2 = 100, 200
 spacing = 10 #21
 radius = 2
+
+lumMin, lumMax = 50, 255
+lumWidth = int(100*(lumMax-lumMin)/(2*(R1+R2)))
+maps = [i for i in range(lumMin*100, lumMax*100, lumWidth)]
 
 def all_positions(R1, R2, spacing=10):
     positions = []
@@ -30,13 +34,18 @@ def all_positions(R1, R2, spacing=10):
             positions.append([x, y, z])
     return positions
 
-def zBuffer(R1, R2, zPos):
-    alpha = 255
-    return alpha
+def surfNormals():
+    pass
+
+def zBuffer(zPos, lumMap):
+    alpha = 200
+    index = int(zPos+301)
+    alpha = lumMap[index]/100
+    return int(alpha)
 
 def drawCircle(positions, radius=2):
     for i in positions:
-        alpha = zBuffer(R1, R2, i[-1])
+        alpha = zBuffer(i[-1], maps)
         color = (alpha, alpha, alpha)
         pygame.draw.circle(screen, color, (i[0]+x_offset, i[1]+y_offset), radius)
 
@@ -51,23 +60,15 @@ def rotate(positions, A, B):
     return positions
     
 cir = all_positions(R1, R2, spacing)
-
-i = 0
 run = True
 
 while run:
     clock.tick(FPS)
     screen.fill((0, 0, 0))
-    # pos = cir
-    # i += 1
-    # if i > 15:
-    #     i=0
-    # pos = don[i]
+    
     # pygame.time.wait(200)
     drawCircle(cir, radius)
-
     cir = rotate(cir, A, B)
-
 
     pygame.display.update()
 
